@@ -1,11 +1,11 @@
 import express from 'express';
-import router from './src/routes';
+import routes from './src/routes';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import http from 'http';
-import logger from 'morgan';
+import logger  from 'morgan';
 import { authMiddleware } from './src/middlewares';
-import { normalizePort } from "./src/util";
+import { normalizePort } from './src/util';
 
 const app = express();
 app.use(logger('dev'));
@@ -15,7 +15,7 @@ app.use(authMiddleware);
 const port = normalizePort(process.env.PORT || 5000);
 app.set('port', port);
 app.use(cors());
-app.use(router);
+app.use(routes);
 const server = http.createServer(app);
 
 server.listen(port, () => {
