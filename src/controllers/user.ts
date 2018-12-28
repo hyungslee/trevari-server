@@ -46,22 +46,32 @@ router.post('/login', async(req, res, next) => {
       email:req.body.email,
       password:req.body.password,
     }});
-    if (result){
-        res.send(true)
-    } else {
-        res.send(false)
-    }
-  }
-});
-
-router.post('/updatePassword', async(req, res, next)=>{
-  if (req.body.password && req.body.email){
-    const result = await userModel.update({password:req.body.password},{where:{email:req.body.email}});
-    if (result[0]===1){
+    if (result) {
       res.send(true);
     } else {
       res.send(false);
     }
   }
-})
+});
+
+router.post('/updatePassword', async(req, res, next) => {
+  if (req.body.password && req.body.email) {
+    const result = await userModel.update({ password:req.body.password }, { where:{ email:req.body.email } });
+    if (result[0] === 1) {
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  }
+});
+router.post('/updatePhoneNumber', async(req, res, next) => {
+  if (req.body.phoneNumber && req.body.email) {
+    const result = await userModel.update({ phoneNumber:req.body.phoneNumber}, { where:{ email:req.body.email } });
+    if (result[0] === 1) {
+      res.send(true);
+    } else {
+      res.send(false);
+    }
+  }
+});
 module.exports = router;
