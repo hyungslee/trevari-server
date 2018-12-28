@@ -4,8 +4,9 @@ describe('API test', async () => {
 
   test('baseURL response test', async () => {
     const { data } = await axios.get('http://localhost:5000');
-    jest.setTimeout(10000);
-    expect(data.name).toEqual('Anne');
-    expect(data.message).toEqual('hi');
+    expect(data).toEqual('Hello World!');
+    expect(typeof data).toEqual('string');
+    // expect(data.name).toEqual('Galbi');
+    // expect(data.message).toEqual('hi');
   });
 });

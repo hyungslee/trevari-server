@@ -1,7 +1,7 @@
 // src/instances/sequelize.ts
 
 import Sequelize from 'sequelize';
-const db = 'expressapp';
+const db = 'trevariapp';
 const username = 'root';
 const password = 'root';
 
@@ -10,4 +10,4 @@ export const sequelize = new Sequelize(db, username, password, {
     port: 5001,
 });
 
-sequelize.authenticate()
+sequelize.authenticate();
