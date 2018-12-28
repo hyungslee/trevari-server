@@ -57,8 +57,11 @@ router.post('/login', async(req, res, next) => {
 router.post('/updatePassword', async(req, res, next)=>{
   if (req.body.password && req.body.email){
     const result = await userModel.update({password:req.body.password},{where:{email:req.body.email}});
-    console.log(result)
-    res.send(result)
+    if (result[0]===1){
+      res.send(true);
+    } else {
+      res.send(false);
+    }
   }
 })
 module.exports = router;
