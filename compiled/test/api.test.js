@@ -15,8 +15,9 @@ const axios_1 = __importDefault(require("axios"));
 describe('API test', () => __awaiter(this, void 0, void 0, function* () {
     test('baseURL response test', () => __awaiter(this, void 0, void 0, function* () {
         const { data } = yield axios_1.default.get('http://localhost:5000');
-        jest.setTimeout(10000);
-        expect(data.name).toEqual('Anne');
-        expect(data.message).toEqual('hi');
+        expect(data).toEqual('Hello World!');
+        expect(typeof data).toEqual('string');
+        // expect(data.name).toEqual('Galbi');
+        // expect(data.message).toEqual('hi');
     }));
 }));

@@ -1,19 +1,34 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getModels = (user) => __awaiter(this, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => {
-        resolve({
-            name: user.name,
-            message: 'hi',
-            id: user.userId,
-        });
-    });
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const db = {};
+let sequelize;
+if (config.use_env_variable) {
+    sequelize = new Sequelize(process.env[config.use_env_variable], config);
+}
+else {
+    sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+fs
+    .readdirSync(__dirname)
+    .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+})
+    .forEach(file => {
+    console.log(__dirname, file);
+    const model = sequelize['import'](path.join(__dirname, file));
+    db[model.name] = model;
+    console.log(db);
 });
+Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
+    }
+});
+db['sequelize'] = sequelize;
+db['Sequelize'] = Sequelize;
+module.exports = db;
