@@ -35,7 +35,9 @@ router.post('/searchByISBN', async(req, res, next)=>{
     if (req.body.input && typeof req.body.input === 'string'){
         const result = await bookModel.findOne({where: {
                 isbn: req.body.input
-            }});
+            }}).catch(error=>{
+                console.log(error)
+        });
         console.log(result);
         if (result){
             res.send(result);
@@ -61,5 +63,6 @@ router.post('/importData',async(req, res, next)=>{
         publishedAt:Number(date)
     });
     res.send(result)
-})
+});
+
 module.exports = router;

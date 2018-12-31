@@ -1,27 +1,30 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    var Bookmark = sequelize.define('Bookmark', {
-        id:{
-            type: DataTypes.INTEGER,
-            autoIncrement:true,
-            primaryKey:true,
-        },
-        book_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        }
-    });
-    Bookmark.associate = function (models) {
-        models.Bookmark.belongsTo(models.User, {
-            onDelete: "CASCADE",
-            foreignKey: {
-                allowNull: false
-            }
-        });
-    };
-    return Bookmark;
+  const Bookmark = sequelize.define('Bookmark', {
+    id : {
+      primaryKey:true,
+      type:DataTypes.INTEGER,
+        auto_increment:true,
+    },
+    book_id : {
+      type: DataTypes.INTEGER,
+      allowNull:false
+    },
+    user_id : {
+      type:DataTypes.INTEGER,
+        allowNull: false
+    }
+  });
+  // Bookmark.associate = function (models) {
+  //   models.User.belongsToMany(models.Book,
+  //       {
+  //         through:'Bookmark'
+  //       });
+  //     models.Book.belongsToMany(models.User,
+  //         {
+  //             through:'Bookmark'
+  //         });
+  //
+  // };
+  return Bookmark;
 };
