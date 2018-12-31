@@ -19,6 +19,8 @@ router.post('/signup', async (req, res, next) => {
       name:req.body.name,
       password:req.body.password,
       phoneNumber:req.body.phoneNumber,
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
     res.send(result);
   } else {
