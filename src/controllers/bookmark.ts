@@ -16,29 +16,26 @@ router.get('/getMyBookmarks',  (req, res, next) => {
 router.post('/addBookmark',  async (req, res, next) => {
     // console.log(userModel)
   if (req.body.userId && req.body.isbn) {
-      console.log(req.body.userId)
     const result = await models.Book.findOne({where:{
                 isbn:req.body.isbn,
-            }}).then(async (book)=>{
-                console.log(book.id, req.body);
-                if (book.id && req.body.userId){
-                    var resultado = await bookmarkModel.create({
+            }}).then(async (book) => {
+              if (book.id && req.body.userId) {
+                  let resultado = await bookmarkModel.create({
                         user_id:req.body.userId,
                         book_id:book.id,
                         createdAt: new Date(),
-                        updatedAt: new Date()
-                    }).catch((error)=>{
-                        console.error(error)
-                        next()
-                    })
+                        updatedAt: new Date(),
+                    }).catch((error) => {
+                      console.error(error);
+                      next();
+                    });
                 }
-    });
+            });
     res.send(true);
   } else {
     res.send('bad request');
     res.status(400);
   }
-
 });
 
 module.exports = router;
