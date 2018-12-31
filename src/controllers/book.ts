@@ -48,4 +48,18 @@ router.post('/searchByISBN', async(req, res, next)=>{
     }
 });
 
+router.post('/importData',async(req, res, next)=>{
+    let date = new Date().toISOString().slice(0,10).replace('-','').replace('-','');
+    console.log(date, Number(date))
+    const result = await bookModel.create({
+        title: req.body.title,
+        author: req.body.author,
+        description: req.body.description,
+        publisher:req.body.publisher,
+        isbn:req.body.isbn,
+        image:req.body.image,
+        publishedAt:Number(date)
+    });
+    res.send(result)
+})
 module.exports = router;
