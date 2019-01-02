@@ -25,20 +25,20 @@ router.post('/addBookmark',  async (req, res, next) => {
                         book_id:book.id,
                         createdAt: new Date(),
                         updatedAt: new Date(),
-                    }).then(x=>{
+                    }).then(x => {
                         console.log(x);
-                        res.send(true)
+                        res.send(true);
                   })
                       .catch((error) => {
-                      console.error(error);
-                      next();
-                    });
+                        console.error(error);
+                        next();
+                      });
               }
             });
 
   } else {
-      res.sendStatus(400);
-    //res.send('bad request');
+    res.sendStatus(400);
+    // res.send('bad request');
 
   }
 });
@@ -70,7 +70,7 @@ router.post('/deleteBookmark', async(req, res, next) => {
 });
 router.post('/getMyBookmarks', async(req, res, next) => {
   if (req.body.userId) {
-      console.log(req.body.userId)
+    console.log(req.body.userId);
     const result = await bookmarkModel.findAll({where:
       {
         user_id:req.body.userId,
@@ -78,7 +78,7 @@ router.post('/getMyBookmarks', async(req, res, next) => {
       }).catch((error) => {
         console.error(error);
       });
-    console.log('result',result)
+    console.log('result', result);
     if (result) {
       res.send(result);
     } else {
