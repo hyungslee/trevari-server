@@ -35,8 +35,5 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         }
     });
-    User.associate = function (models) {
-        models.User.hasMany(models.Bookmark);
-    };
     return User;
 };

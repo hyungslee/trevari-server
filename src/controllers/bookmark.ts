@@ -25,24 +25,29 @@ router.post('/addBookmark',  async (req, res, next) => {
                         book_id:book.id,
                         createdAt: new Date(),
                         updatedAt: new Date(),
-                    }).catch((error) => {
+                    }).then(x=>{
+                        console.log(x);
+                        res.send(true)
+                  })
+                      .catch((error) => {
                       console.error(error);
                       next();
                     });
               }
             });
-    res.send(true);
+
   } else {
-    res.send('bad request');
-    res.status(400);
+      res.sendStatus(400);
+    //res.send('bad request');
+
   }
 });
 
 router.post('/deleteBookmark', async(req, res, next) => {
     // console.log(req.url)
   if (req.body.isbn && typeof req.body.isbn === 'string' && req.body.userId) {
-      const r = await models.Book.findOne({where:
-              {isbn:req.body.isbn,}
+    const r = await models.Book.findOne({where:
+              { isbn:req.body.isbn },
         }).then(async (book) => {
           const result = await bookmarkModel.destroy({where:
                     {
@@ -52,17 +57,35 @@ router.post('/deleteBookmark', async(req, res, next) => {
             }).catch(error => {
               res.send(false);
             });
-          if (result){
-              res.send(true)
+          if (result) {
+            res.send(true);
           } else {
-              res.send(false)
+            res.send(false);
           }
-          //res.send(true);
         });
-    } else {
-      res.sendStatus(400);
-      res.send(false);
-    }
+  } else {
+    res.sendStatus(400);
+    res.send(false);
+  }
 });
-
+router.post('/getMyBookmarks', async(req, res, next) => {
+  if (req.body.userId) {
+      console.log(req.body.userId)
+    const result = await bookmarkModel.findAll({where:
+      {
+        user_id:req.body.userId,
+      },
+      }).catch((error) => {
+        console.error(error);
+      });
+    console.log('result',result)
+    if (result) {
+      res.send(result);
+    } else {
+      res.send([]);
+    }
+  } else {
+    res.sendStatus(400);
+  }
+});
 module.exports = router;
