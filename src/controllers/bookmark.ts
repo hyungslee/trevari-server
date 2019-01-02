@@ -20,7 +20,7 @@ router.post('/addBookmark',  async (req, res, next) => {
                 isbn:req.body.isbn,
             }}).then(async (book) => {
               if (book.id && req.body.userId) {
-                  let resultado = await bookmarkModel.create({
+                const resultado = await bookmarkModel.create({
                         user_id:req.body.userId,
                         book_id:book.id,
                         createdAt: new Date(),
@@ -29,13 +29,40 @@ router.post('/addBookmark',  async (req, res, next) => {
                       console.error(error);
                       next();
                     });
-                }
+              }
             });
     res.send(true);
   } else {
     res.send('bad request');
     res.status(400);
   }
+});
+
+router.post('/deleteBookmark', async(req, res, next) => {
+    // console.log(req.url)
+  if (req.body.isbn && typeof req.body.isbn === 'string' && req.body.userId) {
+      const r = await models.Book.findOne({where:
+              {isbn:req.body.isbn,}
+        }).then(async (book) => {
+          const result = await bookmarkModel.destroy({where:
+                    {
+                        user_id:req.body.userId,
+                        book_id:book.id,
+                    },
+            }).catch(error => {
+              res.send(false);
+            });
+          if (result){
+              res.send(true)
+          } else {
+              res.send(false)
+          }
+          //res.send(true);
+        });
+    } else {
+      res.sendStatus(400);
+      res.send(false);
+    }
 });
 
 module.exports = router;
