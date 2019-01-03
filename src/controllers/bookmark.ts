@@ -70,22 +70,31 @@ router.post('/deleteBookmark', async(req, res, next) => {
 });
 router.post('/getMyBookmarks', async(req, res, next) => {
   if (req.body.userId) {
-    console.log(req.body.userId);
-    const result = await bookmarkModel.findAll({where:
-      {
-        user_id:req.body.userId,
-      },
-      }).catch((error) => {
-        console.error(error);
-      });
-    console.log('result', result);
-    if (result) {
-      res.send(result);
-    } else {
-      res.send([]);
-    }
+      const result = await bookmarkModel.findAll({
+          where: {
+              'user_id': req.body.userId
+          },
+          include: [models.Book]
+      })
+    // console.log(req.body.userId);
+    // const result = await bookmarkModel.findAll({where:
+    //   {
+    //     user_id:req.body.userId,
+    //   },
+    //   }).catch((error) => {
+    //     console.error(error);
+    //   });
+    // console.log('result', result);
+    // if (result) {
+    //   res.send(result);
+    // } else {
+    //   res.send([]);
+    // }
+      console.log(result)
+      res.send(result)
   } else {
     res.sendStatus(400);
   }
 });
+
 module.exports = router;

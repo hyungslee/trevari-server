@@ -35,11 +35,19 @@ module.exports = (sequelize, DataTypes) => {
         publishedAt:{
             type: DataTypes.INTEGER,
             allowNull:true
+        },
+        averageScore: {
+            type: DataTypes.FLOAT,
+            allowNull:true,
+            defatultValue:0.0
         }
     },
         {
             timestamps: false
         })
-    console.log(Book)
+    Book.associate = function(models){
+        models.Book.hasMany(models.Bookmark, { foreignKey: 'book_id', sourceKey:'id'});
+        models.Book.hasMany(models.Review, {foreignKey:'book_id', sourceKey:'id'});
+    }
     return Book;
 };

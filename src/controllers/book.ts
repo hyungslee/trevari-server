@@ -18,7 +18,7 @@ router.post('/searchByTitle', async(req, res, next) => {
     console.log(result);
     res.send(result);
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -33,7 +33,7 @@ router.post('/searchByAuthor', async(req, res, next) => {
     console.log(result);
     res.send(result);
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -53,7 +53,7 @@ router.post('/searchByISBN', async(req, res, next) => {
     }
 
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -80,7 +80,7 @@ router.post('/getBookById', async(req, res, next) => {
                 }}
         ).then((book)=>{
             console.log(book);
-            res.send(book)
+            res.send(book);
         })
         .catch((error) => {
           console.error(error);

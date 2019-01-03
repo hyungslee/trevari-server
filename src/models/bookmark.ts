@@ -16,5 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+  Bookmark.associate = function (models) {
+    models.Bookmark.belongsTo(models.Book, {foreignKey:'book_id'});
+    models.Bookmark.belongsTo(models.User, {foreignKey:'user_id'});
+  }
   return Bookmark;
-};
+}
