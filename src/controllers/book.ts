@@ -72,7 +72,7 @@ router.post('/importData', async(req, res, next) => {
   res.send(result);
 });
 router.post('/getBookById', async(req, res, next) => {
-    console.log(Number(req.body.id))
+    console.log(req.body.id)
   if (req.body.id) {
     const result = await bookModel.findOne({where:
                 {
