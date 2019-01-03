@@ -68,7 +68,24 @@ router.post('/editReview', async(req, res, next) => {
     res.sendStatus(400);
   }
 });
-
+router.post('/getReviewsForBookId', async (req, res, next) => {
+    if (req.body.bookId){
+        const result = reviewModel.findAll({
+            where: {
+                book_id: req.body.bookId
+            },
+            include: [models.User]
+        }).then((x)=>{
+            res.send(x)
+        }).catch((error)=>{
+            console.error(error)
+            res.sendStatus(404)
+        })
+    } else {
+        res.sendStatus(400)
+    }
+    }
+)
 router.post('/getMyReviews', async (req, res, next) => {
     if (req.body.userId){
         const result = await reviewModel.findAll({
