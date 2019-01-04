@@ -50,7 +50,7 @@ router.post('/login', async(req, res, next) => {
       password:req.body.password,
     }});
     if (result) {
-      res.send(true);
+      res.send(result);
     } else {
       res.send(false);
     }
