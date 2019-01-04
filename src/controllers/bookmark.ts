@@ -8,11 +8,6 @@ const sequelize = require('sequelize');
 router.use(cors());
 console.log('============== bookmark controller OK ==============');
 
-router.get('/getMyBookmarks',  (req, res, next) => {
-
-  console.log(bookmarkModel);
-  res.send('hello!');
-});
 router.post('/addBookmark',  async (req, res, next) => {
     // console.log(userModel)
   if (req.body.userId && req.body.bookId) {
