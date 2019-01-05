@@ -16,7 +16,9 @@ router.post('/addReview', async (req, res, next) => {
             score: req.body.score,
             text: req.body.text,
         }).then((review) => {
+            models.Book.updateScoreOfId(models, req.body.bookId);
             res.send(true);
+
         }).catch((error) => {
           res.sendStatus(404);
           console.error(error);
@@ -34,6 +36,7 @@ router.post('/deleteReview', async (req, res, next) => {
                 book_id: req.body.bookId,
             },
         }).then((del) => {
+            models.Book.updateScoreOfId(models, req.body.bookId);
             res.send(true);
         }).catch((error) => {
           console.error(error);
@@ -56,6 +59,7 @@ router.post('/editReview', async(req, res, next) => {
       },
     }).then((update) => {
         if (update) {
+            models.Book.updateScoreOfId(models, req.body.bookId);
             res.send(true);
         } else {
             res.send(false);
@@ -69,70 +73,35 @@ router.post('/editReview', async(req, res, next) => {
   }
 });
 router.post('/getReviewsForBookId', async (req, res, next) => {
-    if (req.body.bookId){
-        const result = reviewModel.findAll({
+  if (req.body.bookId) {
+    const result = reviewModel.findAll({
             where: {
-                book_id: req.body.bookId
+                book_id: req.body.bookId,
             },
-            include: [models.User]
-        }).then((x)=>{
-            res.send(x)
-        }).catch((error)=>{
-            console.error(error)
-            res.sendStatus(404)
-        })
-    } else {
-        res.sendStatus(400)
-    }
-    }
-)
-router.post('/getMyReviews', async (req, res, next) => {
-    if (req.body.userId){
-        const result = await reviewModel.findAll({
-            where:{
-                user_id: req.body.userId
-            },
-            include: [bookModel]
+            include: [models.User],
+        }).then((x) => {
+            res.send(x);
+        }).catch((error) => {
+          console.error(error);
+          res.sendStatus(404);
         });
-        res.send(result)
-    } else {
-        res.sendStatus(400)
-    }
-    //let chainer = Sequelize.Utils.QueryChainer;
-
-  // if (req.body.userId) {
-  //   let books : BookType[] = [];
-  //   const result = await reviewModel.findAll({
-  //                 where:{
-  //                     user_id:req.body.userId,
-  //                 },
-  //             }).then((reviews) => {
-  //               reviews.forEach(async (review) => {
-  //                 const book = await bookModel.findOne({
-  //                       where : {
-  //                           id:review.book_id,
-  //                       },
-  //                   }).then((b) => {
-  //                     books = [...books, b];
-  //                     console.log(books);
-  //                   });
-  //               });
-  //               //res.send(books);
-  //             }).then(()=>{
-  //                 res.send(books)
-  //                 console.log('books',books)
-  //   });
-  // } else {
-  //   res.sendStatus(400);
-  // }
+  } else {
+    res.sendStatus(400);
+  }
+},
+);
+router.post('/getMyReviews', async (req, res, next) => {
+  if (req.body.userId) {
+    const result = await reviewModel.findAll({
+      where:{
+        user_id: req.body.userId,
+      },
+      include: [bookModel],
+    });
+    res.send(result);
+  } else {
+    res.sendStatus(400);
+  }
 });
-// type BookType = {
-//   'id': number,
-//   'title':string,
-//   'description':string,
-//   'image':string,
-//   'author':string,
-//   'publishedAt':number,
-//     'publisher':string
-// };
+
 module.exports = router;
