@@ -96,7 +96,7 @@ router.post('/getMyReviews', async (req, res, next) => {
       where:{
         user_id: req.body.userId,
       },
-      include: [bookModel],
+    t  include: [bookModel],
     });
     res.send(result);
   } else {
