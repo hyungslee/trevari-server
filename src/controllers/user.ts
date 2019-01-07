@@ -58,8 +58,8 @@ router.post('/login', async(req, res, next) => {
 });
 
 router.post('/updatePassword', async(req, res, next) => {
-  if (req.body.password && req.body.email) {
-    const result = await userModel.update({ password:req.body.password }, { where:{ email:req.body.email } });
+  if (req.body.password && req.body.userId) {
+    const result = await userModel.update({ password:req.body.password }, { where:{ id:req.body.userId } });
     if (result[0] === 1) {
       res.send(true);
     } else {
@@ -68,8 +68,8 @@ router.post('/updatePassword', async(req, res, next) => {
   }
 });
 router.post('/updatePhoneNumber', async(req, res, next) => {
-  if (req.body.phoneNumber && req.body.email) {
-    const result = await userModel.update({ phoneNumber:req.body.phoneNumber}, { where:{ email:req.body.email } });
+  if (req.body.phoneNumber && req.body.userId) {
+    const result = await userModel.update({ phoneNumber:req.body.userId}, { where:{ id:req.body.userId } });
     if (result[0] === 1) {
       res.send(true);
     } else {
