@@ -58,6 +58,7 @@ router.post('/searchByISBN', async(req, res, next) => {
 });
 
 router.post('/importData', async(req, res, next) => {
+    console.log(req.body)
   const result = await bookModel.create({
     title: req.body.title,
     author: req.body.author,
@@ -65,7 +66,7 @@ router.post('/importData', async(req, res, next) => {
     publisher:req.body.publisher,
     isbn:req.body.isbn,
     image:req.body.image,
-    publishedAt:req.body.publishedAt,
+    publishedAt:Number(req.body.publishedAt),
   });
   res.send(result);
 });

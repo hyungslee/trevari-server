@@ -69,7 +69,7 @@ router.post('/updatePassword', async(req, res, next) => {
 });
 router.post('/updatePhoneNumber', async(req, res, next) => {
   if (req.body.phoneNumber && req.body.userId) {
-    const result = await userModel.update({ phoneNumber:req.body.userId}, { where:{ id:req.body.userId } });
+    const result = await userModel.update({ phoneNumber:req.body.phoneNumber}, { where:{ id:req.body.userId } });
     if (result[0] === 1) {
       res.send(true);
     } else {
