@@ -67,6 +67,9 @@ router.post('/importData', async(req, res, next) => {
     isbn:req.body.isbn,
     image:req.body.image,
     publishedAt:Number(req.body.publishedAt),
+  }).catch((error)=>{
+      res.sendStatus(400)
+      console.error('import error')
   });
   res.send(result);
 });
