@@ -7,7 +7,7 @@ var cors = require('cors');
 var sequelize = require('sequelize');
 router.use(cors());
 console.log('============== review controller OK ==============');
-router.post('/addReview', async (req, res, next) => {
+router.post('/review', async (req, res, next) => {
   if (req.body.userId && req.body.bookId) {
     await reviewModel
       .create({
@@ -29,7 +29,7 @@ router.post('/addReview', async (req, res, next) => {
   }
 });
 
-router.post('/deleteReview', async (req, res, next) => {
+router.delete('/review', async (req, res, next) => {
   if (req.body.userId && req.body.bookId) {
     await reviewModel
       .destroy({
@@ -51,7 +51,7 @@ router.post('/deleteReview', async (req, res, next) => {
   }
 });
 
-router.post('/editReview', async (req, res, next) => {
+router.put('/review', async (req, res, next) => {
   if (req.body.userId && req.body.bookId && req.body.text && req.body.score) {
     await reviewModel
       .update(
@@ -82,7 +82,7 @@ router.post('/editReview', async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-router.post('/getReviewsForBookId', async (req, res, next) => {
+router.get('/book-id', async (req, res, next) => {
   if (req.body.bookId) {
     await reviewModel
       .findAll({
@@ -102,7 +102,7 @@ router.post('/getReviewsForBookId', async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-router.post('/getMyReviews', async (req, res, next) => {
+router.get('/my-reviews', async (req, res, next) => {
   if (req.body.userId) {
     const result = await reviewModel.findAll({
       where: {

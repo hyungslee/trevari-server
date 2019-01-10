@@ -8,7 +8,7 @@ var sequelize = require('sequelize');
 router.use(cors());
 console.log('============== book controller OK ==============');
 console.log('book model', bookModel);
-router.post('/searchByTitle', async (req, res, next) => {
+router.get('/search/title', async (req, res, next) => {
   if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findAll({
@@ -30,7 +30,7 @@ router.post('/searchByTitle', async (req, res, next) => {
   }
 });
 
-router.post('/searchByAuthor', async (req, res, next) => {
+router.get('/search/author', async (req, res, next) => {
   if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findAll({
@@ -52,7 +52,7 @@ router.post('/searchByAuthor', async (req, res, next) => {
   }
 });
 
-router.post('/searchByISBN', async (req, res, next) => {
+router.get('/search/isbn', async (req, res, next) => {
   if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findOne({
@@ -92,7 +92,7 @@ router.post('/importData', async (req, res, next) => {
     });
   res.send(result);
 });
-router.post('/getBookById', async (req, res, next) => {
+router.get('/id', async (req, res, next) => {
   if (req.body.id) {
     const result = await bookModel
       .findOne({
