@@ -6,7 +6,7 @@ var cors = require('cors');
 router.use(cors());
 console.log('============== user controller OK ==============');
 
-router.post('/signup', async (req, res, next) => {
+router.post('/user', async (req, res, next) => {
   if (req.body.email && req.body.name && req.body.password && req.body.phoneNumber) {
     const result = await userModel.create({
       email:req.body.email,
@@ -23,7 +23,7 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
-router.post('/checkEmailAvailability', async(req, res, next) => {
+router.get('/email', async(req, res, next) => {
   if (req.body.email) {
     const result = await userModel.findAll({where:{
       email:req.body.email,
@@ -36,7 +36,7 @@ router.post('/checkEmailAvailability', async(req, res, next) => {
   }
 });
 
-router.post('/login', async(req, res, next) => {
+router.get('/user', async(req, res, next) => {
   if (req.body.email && req.body.password) {
     const result = await userModel.findOne({where:{
       email:req.body.email,
@@ -50,7 +50,7 @@ router.post('/login', async(req, res, next) => {
   }
 });
 
-router.post('/updatePassword', async(req, res, next) => {
+router.put('/password', async(req, res, next) => {
   if (req.body.password && req.body.userId) {
     const result = await userModel.update({ password:req.body.password },
                                           { where:{ id:req.body.userId } });
@@ -61,7 +61,7 @@ router.post('/updatePassword', async(req, res, next) => {
     }
   }
 });
-router.post('/updatePhoneNumber', async(req, res, next) => {
+router.put('/phone-number', async(req, res, next) => {
   if (req.body.phoneNumber && req.body.userId) {
     const result = await userModel.update({ phoneNumber:req.body.phoneNumber },
                                           { where:{ id:req.body.userId } });
