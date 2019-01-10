@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/cors": "^2.8.4",
     "@types/http-errors": "^1.6.1",
+    "aws-sdk": "^2.384.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "http-errors": "^1.7.1",
@@ -22,6 +23,7 @@
     "body-parser": "^1.18.3",
     "jest": "^23.6.0",
     "morgan": "^1.9.1",
+    "prettier": "^1.15.3",
     "tslint-config-airbnb": "^5.11.1"
   },
   "scripts": {

@@ -1,16 +1,10 @@
-import express from 'express';
-const router = express.Router();
-const models = require('../models');
-const userModel = models.User;
-const cors = require('cors');
+var express = require('express');
+var router = express.Router();
+var models = require('../models');
+var userModel = models.User;
+var cors = require('cors');
 router.use(cors());
 console.log('============== user controller OK ==============');
-
-router.get('/', (req, res) => {
-  console.log(req.method);
-  res.status(200);
-  res.send('hi');
-});
 
 router.post('/signup', async (req, res, next) => {
   if (req.body.email && req.body.name && req.body.password && req.body.phoneNumber) {
@@ -21,7 +15,6 @@ router.post('/signup', async (req, res, next) => {
       phoneNumber:req.body.phoneNumber,
       createdAt: new Date(),
       updatedAt: new Date(),
-
     });
     res.send(result);
   } else {
@@ -59,7 +52,8 @@ router.post('/login', async(req, res, next) => {
 
 router.post('/updatePassword', async(req, res, next) => {
   if (req.body.password && req.body.userId) {
-    const result = await userModel.update({ password:req.body.password }, { where:{ id:req.body.userId } });
+    const result = await userModel.update({ password:req.body.password },
+                                          { where:{ id:req.body.userId } });
     if (result[0] === 1) {
       res.send(true);
     } else {
@@ -69,7 +63,8 @@ router.post('/updatePassword', async(req, res, next) => {
 });
 router.post('/updatePhoneNumber', async(req, res, next) => {
   if (req.body.phoneNumber && req.body.userId) {
-    const result = await userModel.update({ phoneNumber:req.body.phoneNumber}, { where:{ id:req.body.userId } });
+    const result = await userModel.update({ phoneNumber:req.body.phoneNumber },
+                                          { where:{ id:req.body.userId } });
     if (result[0] === 1) {
       res.send(true);
     } else {

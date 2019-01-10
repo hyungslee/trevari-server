@@ -1,6 +1,6 @@
 'use strict';
 // src/models/user.ts
-import sequelize from 'sequelize';
+var sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define('Review', {
     id: {
