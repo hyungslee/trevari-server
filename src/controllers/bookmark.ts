@@ -5,7 +5,7 @@ const bookmarkModel = models.Bookmark;
 const cors = require('cors');
 router.use(cors());
 console.log('============== bookmark controller OK ==============');
-router.post('/addBookmark',  async (req, res, next) => {
+router.post('/bookmark',  async (req, res, next) => {
   if (req.body.userId && req.body.bookId) {
     await models.Bookmark.create({
       user_id:req.body.userId,
@@ -22,8 +22,7 @@ router.post('/addBookmark',  async (req, res, next) => {
   }
 });
 
-router.post('/deleteBookmark', async(req, res, next) => {
-    // console.log(req.url)
+router.delete('/bookmark', async(req, res, next) => {
   if (req.body.userId &&  req.body.bookmarkId) {
     await bookmarkModel.destroy({
       where:{
@@ -37,10 +36,10 @@ router.post('/deleteBookmark', async(req, res, next) => {
     });
   } else {
     res.sendStatus(400);
-    res.send(false);
+
   }
 });
-router.post('/getMyBookmarks', async(req, res, next) => {
+router.get('/my-bookmarks', async(req, res, next) => {
   if (req.body.userId) {
     await bookmarkModel.findAll({
       where: {
