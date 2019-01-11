@@ -19,6 +19,8 @@ router.get('/search/title', async (req, res, next) => {
             `%${req.body.input.toLowerCase()}%`,
           ),
         },
+          offset:req.body.offset,
+          limit:30
       })
       .catch((error) => {
         console.error(error);
@@ -41,6 +43,8 @@ router.get('/search/author', async (req, res, next) => {
             `%${req.body.input.toLowerCase()}%`,
           ),
         },
+          offset:req.body.offset,
+          limit:30
       })
       .catch((error) => {
         res.send(404);
