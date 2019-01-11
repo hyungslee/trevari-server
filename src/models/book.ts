@@ -50,9 +50,10 @@ module.exports = (sequelize, DataTypes) => {
     models.Book.hasMany(models.Review, { foreignKey: 'book_id', sourceKey: 'id' });
   };
   Book.updateScoreOfId = async (models, id) => {
-    const result = await sequelize.query(`SELECT AVG(score) FROM Reviews where id = ${id}`)
+    const result = await sequelize.query(`SELECT AVG(score) FROM Reviews where book_id = ${id}`)
             .spread(async(res, meta) => {
               const newAvgScore = res[0]['AVG(score)'];
+              console.log(newAvgScore)
               const update = models.Book.update({
                     averageScore:newAvgScore,
                 },{ where:{ id } },
