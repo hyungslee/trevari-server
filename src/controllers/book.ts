@@ -1,28 +1,28 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var models = require('../models');
+var models = require("../models");
 var bookModel = models.Book;
-var cors = require('cors');
-var sequelize = require('sequelize');
+var cors = require("cors");
+var sequelize = require("sequelize");
 
 router.use(cors());
-console.log('============== book controller OK ==============');
-console.log('book model', bookModel);
-router.get('/search/title', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+console.log("============== book controller OK ==============");
+console.log("book model", bookModel);
+router.get("/search/title", async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === "string") {
     const result = await bookModel
       .findAll({
         where: {
           title: sequelize.where(
-            sequelize.fn('LOWER', sequelize.col('title')),
-            'LIKE',
-            `%${req.body.input.toLowerCase()}%`,
-          ),
+            sequelize.fn("LOWER", sequelize.col("title")),
+            "LIKE",
+            `%${req.body.input.toLowerCase()}%`
+          )
         },
-          offset:req.body.offset,
-          limit:30,
+        offset: req.body.offset,
+        limit: 30
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         res.send(404);
       });
@@ -32,21 +32,21 @@ router.get('/search/title', async (req, res, next) => {
   }
 });
 
-router.get('/search/author', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+router.get("/search/author", async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === "string") {
     const result = await bookModel
       .findAll({
         where: {
           author: sequelize.where(
-            sequelize.fn('LOWER', sequelize.col('author')),
-            'LIKE',
-            `%${req.body.input.toLowerCase()}%`,
-          ),
+            sequelize.fn("LOWER", sequelize.col("author")),
+            "LIKE",
+            `%${req.body.input.toLowerCase()}%`
+          )
         },
-          offset:req.body.offset,
-          limit:30,
+        offset: req.body.offset,
+        limit: 30
       })
-      .catch((error) => {
+      .catch(error => {
         res.send(404);
         console.error(error);
       });
@@ -56,15 +56,15 @@ router.get('/search/author', async (req, res, next) => {
   }
 });
 
-router.get('/search/isbn', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+router.get("/search/isbn", async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === "string") {
     const result = await bookModel
       .findOne({
         where: {
-          isbn: req.body.input,
-        },
+          isbn: req.body.input
+        }
       })
-      .catch((error) => {
+      .catch(error => {
         res.send(404);
         console.log(error);
       });
@@ -78,26 +78,48 @@ router.get('/search/isbn', async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-router.get('/new-release', async(req, res, next) => {
+router.get("/new-release", async (req, res, next) => {
   const today = new Date();
   const priorDate = new Date(new Date().setDate(today.getDate() - 30));
-  const priorDateInt = Number(priorDate.toISOString().substr(0, 10).match(/\d/g).join(''));
-  await bookModel.findAll({
-    where:{
-          publishedAt: {
-              [sequelize.Op.gte]:priorDateInt,
-            },
-        },
-      limit:30,
-    }).then((result)=>{
-        res.send(result)
-  }).catch((error)=>{
-      res.send(404);
-      next()
-  });
+  const priorDateInt = Number(
+    priorDate
+      .toISOString()
+      .substr(0, 10)
+      .match(/\d/g)
+      .join("")
+  );
+  await bookModel
+    .findAll({
+      where: {
+        publishedAt: {
+          [sequelize.Op.gte]: priorDateInt
+        }
+      },
+      limit: 30
+    })
+    .then(result => {
+      res.send(result);
+    })
+    .catch(error => {
+      next();
+    });
 });
 
-router.post('/importData', async (req, res, next) => {
+router.get("/best-rated", async (req, res, next) => {
+  await bookModel
+    .findAll({
+      order: [['averageScore', 'DESC']],
+      limit: 30
+    })
+    .then(result => {
+      res.send(result);
+    })
+    .catch(error => {
+      next();
+    });
+});
+
+router.post("/importData", async (req, res, next) => {
   const result = await bookModel
     .create({
       title: req.body.title,
@@ -106,27 +128,27 @@ router.post('/importData', async (req, res, next) => {
       publisher: req.body.publisher,
       isbn: req.body.isbn,
       image: req.body.image,
-      publishedAt: Number(req.body.publishedAt),
+      publishedAt: Number(req.body.publishedAt)
     })
-    .catch((error) => {
+    .catch(error => {
       res.sendStatus(400);
-      console.error('import error:', error);
+      console.error("import error:", error);
     });
   res.send(result);
 });
-router.get('/id', async (req, res, next) => {
+router.get("/id", async (req, res, next) => {
   if (req.body.id) {
     const result = await bookModel
       .findOne({
         where: {
-          id: Number(req.body.id),
-        },
+          id: Number(req.body.id)
+        }
       })
-      .then((book) => {
+      .then(book => {
         console.log(book);
         res.send(book);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
       });
   } else {
