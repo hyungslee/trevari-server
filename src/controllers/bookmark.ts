@@ -36,7 +36,7 @@ router.delete('/bookmark', async(req, res, next) => {
     });
   } else {
     res.sendStatus(400);
-    res.send(false);
+
   }
 });
 router.get('/my-bookmarks', async(req, res, next) => {
