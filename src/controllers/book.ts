@@ -20,7 +20,7 @@ router.get('/search/title', async (req, res, next) => {
           ),
         },
           offset:req.body.offset,
-          limit:30
+          limit:30,
       })
       .catch((error) => {
         console.error(error);
@@ -44,7 +44,7 @@ router.get('/search/author', async (req, res, next) => {
           ),
         },
           offset:req.body.offset,
-          limit:30
+          limit:30,
       })
       .catch((error) => {
         res.send(404);
@@ -77,6 +77,24 @@ router.get('/search/isbn', async (req, res, next) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get('/new-release', async(req, res, next) => {
+  const today = new Date();
+  const priorDate = new Date(new Date().setDate(today.getDate() - 30));
+  const priorDateInt = Number(priorDate.toISOString().substr(0, 10).match(/\d/g).join(''));
+  await bookModel.findAll({
+    where:{
+          publishedAt: {
+              [sequelize.Op.gte]:priorDateInt,
+            },
+        },
+      limit:30,
+    }).then((result)=>{
+        res.send(result)
+  }).catch((error)=>{
+      res.send(404);
+      next()
+  });
 });
 
 router.post('/importData', async (req, res, next) => {
