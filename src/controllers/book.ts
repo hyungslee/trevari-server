@@ -1,26 +1,25 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-var models = require("../models");
+var models = require('../models');
 var bookModel = models.Book;
-var cors = require("cors");
-var sequelize = require("sequelize");
+var cors = require('cors');
+var sequelize = require('sequelize');
 
 router.use(cors());
-console.log("============== book controller OK ==============");
-console.log("book model", bookModel);
-router.get("/search/title", async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === "string") {
+console.log('============== book controller OK ==============');
+router.get('/search/title', async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findAll({
         where: {
           title: sequelize.where(
-            sequelize.fn("LOWER", sequelize.col("title")),
-            "LIKE",
-            `%${req.body.input.toLowerCase()}%`
-          )
+            sequelize.fn('LOWER', sequelize.col('title')),
+            'LIKE',
+            `%${req.body.input.toLowerCase()}%`,
+          ),
         },
         offset: req.body.offset,
-        limit: 30
+        limit: 30,
       })
       .catch(error => {
         console.error(error);
@@ -32,19 +31,19 @@ router.get("/search/title", async (req, res, next) => {
   }
 });
 
-router.get("/search/author", async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === "string") {
+router.get('/search/author', async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findAll({
         where: {
           author: sequelize.where(
-            sequelize.fn("LOWER", sequelize.col("author")),
-            "LIKE",
-            `%${req.body.input.toLowerCase()}%`
-          )
+            sequelize.fn('LOWER', sequelize.col('author')),
+            'LIKE',
+            `%${req.body.input.toLowerCase()}%`,
+          ),
         },
         offset: req.body.offset,
-        limit: 30
+        limit: 30,
       })
       .catch(error => {
         res.send(404);
@@ -56,13 +55,13 @@ router.get("/search/author", async (req, res, next) => {
   }
 });
 
-router.get("/search/isbn", async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === "string") {
+router.get('/search/isbn', async (req, res, next) => {
+  if (req.body.input && typeof req.body.input === 'string') {
     const result = await bookModel
       .findOne({
         where: {
-          isbn: req.body.input
-        }
+          isbn: req.body.input,
+        },
       })
       .catch(error => {
         res.send(404);
@@ -78,7 +77,7 @@ router.get("/search/isbn", async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-router.get("/new-release", async (req, res, next) => {
+router.get('/new-release', async (req, res, next) => {
   const today = new Date();
   const priorDate = new Date(new Date().setDate(today.getDate() - 30));
   const priorDateInt = Number(
@@ -86,16 +85,16 @@ router.get("/new-release", async (req, res, next) => {
       .toISOString()
       .substr(0, 10)
       .match(/\d/g)
-      .join("")
+      .join(''),
   );
   await bookModel
     .findAll({
       where: {
         publishedAt: {
-          [sequelize.Op.gte]: priorDateInt
-        }
+          [sequelize.Op.gte]: priorDateInt,
+        },
       },
-      limit: 30
+      limit: 30,
     })
     .then(result => {
       res.send(result);
@@ -105,11 +104,11 @@ router.get("/new-release", async (req, res, next) => {
     });
 });
 
-router.get("/best-rated", async (req, res, next) => {
+router.get('/best-rated', async (req, res, next) => {
   await bookModel
     .findAll({
       order: [['averageScore', 'DESC']],
-      limit: 30
+      limit: 30,
     })
     .then(result => {
       res.send(result);
@@ -118,8 +117,20 @@ router.get("/best-rated", async (req, res, next) => {
       next();
     });
 });
-
-router.post("/importData", async (req, res, next) => {
+router.get('/most-bookmarks', async (req, res, next) => {
+  await bookModel
+    .findAll({
+      order: [['bookmarkCount', 'DESC']],
+      limit: 30,
+    })
+    .then(result => {
+      res.send(result);
+    })
+    .catch(error => {
+      next();
+    });
+});
+router.post('/importData', async (req, res, next) => {
   const result = await bookModel
     .create({
       title: req.body.title,
@@ -128,21 +139,21 @@ router.post("/importData", async (req, res, next) => {
       publisher: req.body.publisher,
       isbn: req.body.isbn,
       image: req.body.image,
-      publishedAt: Number(req.body.publishedAt)
+      publishedAt: Number(req.body.publishedAt),
     })
     .catch(error => {
       res.sendStatus(400);
-      console.error("import error:", error);
+      console.error('import error:', error);
     });
   res.send(result);
 });
-router.get("/id", async (req, res, next) => {
+router.get('/id', async (req, res, next) => {
   if (req.body.id) {
     const result = await bookModel
       .findOne({
         where: {
-          id: Number(req.body.id)
-        }
+          id: Number(req.body.id),
+        },
       })
       .then(book => {
         console.log(book);
@@ -156,5 +167,54 @@ router.get("/id", async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-
+router.get('/my-recommendations', async (req, res, next) => {
+  console.log(req.body);
+  await models.Review.findAll({
+    where: {
+      user_id: req.body.userId,
+      score: {
+        [sequelize.Op.gte]: 4,
+      },
+    },
+  }).then(async (userReviews) => {
+    const bookIDs = Array.from(new Set(userReviews.map(r => r.book_id)));
+    await models.Review.findAll({
+      where: {
+        book_id: {
+          [sequelize.Op.in]: bookIDs,
+        },
+        user_id: {
+          [sequelize.Op.ne]: req.body.userId,
+        },
+      },
+    }).then(async (otherUsers) => {
+      const otherUserIDs = Array.from(
+        new Set(otherUsers.map(user => user.user_id)),
+      );
+      await models.Review.findAll({
+        where: {
+          user_id: {
+            [sequelize.Op.in]: otherUserIDs,
+          },
+          book_id: {
+            [sequelize.Op.notIn]: bookIDs,
+          },
+        },
+      }).then(async (otherReviews) => {
+        const otherBookIDs = Array.from(
+          new Set(otherReviews.map(rev => rev.book_id)),
+        );
+        await models.Book.findAll({
+          where: {
+            id: {
+              [sequelize.Op.in]: otherBookIDs,
+            },
+          },
+        }).then((recommendedBooks) => {
+          res.send(recommendedBooks);
+        });
+      });
+    });
+  });
+});
 module.exports = router;

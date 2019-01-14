@@ -13,6 +13,7 @@ router.post('/bookmark',  async (req, res, next) => {
     }).then((x) => {
       res.status(200);
       res.send(true);
+      models.Book.updateBookmarkCount(models,req.body.bookId);
     }).catch((error) => {
       console.error(error);
       res.sendStatus(400);

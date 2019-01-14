@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defatultValue: 0.0,
       },
+          bookmarkCount: {
+              type: DataTypes.INTEGER,
+              allowNull: true,
+              defatultValue: 0,
+          },
   },
     {
       timestamps: false,
@@ -50,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     models.Book.hasMany(models.Review, { foreignKey: 'book_id', sourceKey: 'id' });
   };
   Book.updateScoreOfId = async (models, id) => {
-    const result = await sequelize.query(`SELECT AVG(score) FROM Reviews where book_id = ${id}`)
+    await sequelize.query(`SELECT AVG(score) FROM Reviews where book_id = ${id}`)
             .spread(async(res, meta) => {
               const newAvgScore = res[0]['AVG(score)'];
               console.log(newAvgScore)
@@ -60,5 +65,17 @@ module.exports = (sequelize, DataTypes) => {
                 ).then('updated!').catch('update error');
             });
   };
+  Book.updateBookmarkCount = async (models,id)=>{
+      await sequelize.query(`SELECT COUNT(*) FROM Bookmarks WHERE book_id = ${id}`)
+          .spread(async(res, meta) => {
+               const newBookmarkCount = res[0]['COUNT(*)'];
+                models.Book.update({
+                      bookmarkCount:newBookmarkCount,
+                  },{ where:{ id } },
+              ).then(() => {
+                  console.log('updated!')
+                }).catch('update error');
+          });
+  }
   return Book;
 };
