@@ -8,6 +8,7 @@ var sequelize = require('sequelize');
 router.use(cors());
 console.log('============== book controller OK ==============');
 router.get('/search/title', async (req, res, next) => {
+  console.log(req.query)
   if (req.query.input && typeof req.query.input === 'string') {
     const result = await bookModel
       .findAll({
@@ -18,7 +19,7 @@ router.get('/search/title', async (req, res, next) => {
             `%${req.query.input.toLowerCase()}%`,
           ),
         },
-        offset: req.query.offset,
+        offset: Number(req.query.offset),
         limit: 30,
       })
       .catch(error => {
@@ -42,7 +43,7 @@ router.get('/search/author', async (req, res, next) => {
             `%${req.query.input.toLowerCase()}%`,
           ),
         },
-        offset: req.query.offset,
+        offset: Number(req.query.offset),
         limit: 30,
       })
       .catch(error => {

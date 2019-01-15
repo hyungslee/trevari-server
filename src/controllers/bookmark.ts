@@ -47,7 +47,7 @@ router.get('/my-bookmarks', async(req, res, next) => {
         user_id: req.query.userId,
       },
       include: [models.Book],
-        offset: req.query.offset,
+        offset: Number(req.query.offset),
         limit: 30,
     }).then((result) => {
       res.send(result);
