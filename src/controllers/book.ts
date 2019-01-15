@@ -210,6 +210,7 @@ router.get('/my-recommendations', async (req, res, next) => {
               [sequelize.Op.in]: otherBookIDs,
             },
           },
+          limit:30,
         }).then((recommendedBooks) => {
           res.send(recommendedBooks);
         });
