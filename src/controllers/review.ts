@@ -30,16 +30,16 @@ router.post('/review', async (req, res, next) => {
 });
 
 router.delete('/review', async (req, res, next) => {
-  if (req.body.userId && req.body.bookId) {
+  if (req.query.userId && req.query.bookId) {
     await reviewModel
       .destroy({
         where: {
-          user_id: req.body.userId,
-          book_id: req.body.bookId,
+          user_id: req.query.userId,
+          book_id: req.query.bookId,
         },
       })
       .then((del) => {
-        models.Book.updateScoreOfId(models, req.body.bookId);
+        models.Book.updateScoreOfId(models, req.query.bookId);
         res.send(true);
       })
       .catch((error) => {

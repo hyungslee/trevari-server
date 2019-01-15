@@ -24,10 +24,10 @@ router.post('/bookmark',  async (req, res, next) => {
 });
 
 router.delete('/bookmark', async(req, res, next) => {
-  if (req.body.userId &&  req.body.bookmarkId) {
+  if (req.query.userId &&  req.query.bookmarkId) {
     await bookmarkModel.destroy({
       where:{
-        id: req.body.bookmarkId,
+        id: req.query.bookmarkId,
       },
     }).then(() => {
       res.send(true);
