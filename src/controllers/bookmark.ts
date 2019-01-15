@@ -41,12 +41,14 @@ router.delete('/bookmark', async(req, res, next) => {
   }
 });
 router.get('/my-bookmarks', async(req, res, next) => {
-  if (req.body.userId) {
+  if (req.query.userId) {
     await bookmarkModel.findAll({
       where: {
-        user_id: req.body.userId,
+        user_id: req.query.userId,
       },
       include: [models.Book],
+        offset: req.query.offset,
+        limit: 30,
     }).then((result) => {
       res.send(result);
     });

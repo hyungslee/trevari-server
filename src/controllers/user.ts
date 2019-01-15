@@ -24,9 +24,9 @@ router.post('/user', async (req, res, next) => {
 });
 
 router.get('/email', async(req, res, next) => {
-  if (req.body.email) {
+  if (req.query.email) {
     const result = await userModel.findAll({where:{
-      email:req.body.email,
+      email:req.query.email,
     }});
     if (result.length) {
       res.send(false);
@@ -37,16 +37,18 @@ router.get('/email', async(req, res, next) => {
 });
 
 router.get('/user', async(req, res, next) => {
-  if (req.body.email && req.body.password) {
+  if (req.query.email && req.query.password) {
     const result = await userModel.findOne({where:{
-      email:req.body.email,
-      password:req.body.password,
+      email:req.query.email,
+      password:req.query.password,
     }});
     if (result) {
       res.send(result);
     } else {
       res.send(false);
     }
+  } else {
+    res.sendStatus(400);
   }
 });
 

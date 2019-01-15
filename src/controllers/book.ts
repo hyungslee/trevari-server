@@ -8,17 +8,17 @@ var sequelize = require('sequelize');
 router.use(cors());
 console.log('============== book controller OK ==============');
 router.get('/search/title', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+  if (req.query.input && typeof req.query.input === 'string') {
     const result = await bookModel
       .findAll({
         where: {
           title: sequelize.where(
             sequelize.fn('LOWER', sequelize.col('title')),
             'LIKE',
-            `%${req.body.input.toLowerCase()}%`,
+            `%${req.query.input.toLowerCase()}%`,
           ),
         },
-        offset: req.body.offset,
+        offset: req.query.offset,
         limit: 30,
       })
       .catch(error => {
@@ -32,17 +32,17 @@ router.get('/search/title', async (req, res, next) => {
 });
 
 router.get('/search/author', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+  if (req.query.input && typeof req.query.input === 'string') {
     const result = await bookModel
       .findAll({
         where: {
           author: sequelize.where(
             sequelize.fn('LOWER', sequelize.col('author')),
             'LIKE',
-            `%${req.body.input.toLowerCase()}%`,
+            `%${req.query.input.toLowerCase()}%`,
           ),
         },
-        offset: req.body.offset,
+        offset: req.query.offset,
         limit: 30,
       })
       .catch(error => {
@@ -56,11 +56,11 @@ router.get('/search/author', async (req, res, next) => {
 });
 
 router.get('/search/isbn', async (req, res, next) => {
-  if (req.body.input && typeof req.body.input === 'string') {
+  if (req.query.input && typeof req.query.input === 'string') {
     const result = await bookModel
       .findOne({
         where: {
-          isbn: req.body.input,
+          isbn: req.query.input,
         },
       })
       .catch(error => {
@@ -148,11 +148,11 @@ router.post('/importData', async (req, res, next) => {
   res.send(result);
 });
 router.get('/id', async (req, res, next) => {
-  if (req.body.id) {
+  if (req.query.id) {
     const result = await bookModel
       .findOne({
         where: {
-          id: Number(req.body.id),
+          id: Number(req.query.id),
         },
       })
       .then(book => {
@@ -168,10 +168,9 @@ router.get('/id', async (req, res, next) => {
   }
 });
 router.get('/my-recommendations', async (req, res, next) => {
-  console.log(req.body);
   await models.Review.findAll({
     where: {
-      user_id: req.body.userId,
+      user_id: req.query.userId,
       score: {
         [sequelize.Op.gte]: 4,
       },
@@ -184,7 +183,7 @@ router.get('/my-recommendations', async (req, res, next) => {
           [sequelize.Op.in]: bookIDs,
         },
         user_id: {
-          [sequelize.Op.ne]: req.body.userId,
+          [sequelize.Op.ne]: req.query.userId,
         },
       },
     }).then(async (otherUsers) => {

@@ -83,11 +83,11 @@ router.put('/review', async (req, res, next) => {
   }
 });
 router.get('/book-id', async (req, res, next) => {
-  if (req.body.bookId) {
+  if (req.query.bookId) {
     await reviewModel
       .findAll({
         where: {
-          book_id: req.body.bookId,
+          book_id: req.query.bookId,
         },
         include: [models.User],
       })
@@ -103,12 +103,14 @@ router.get('/book-id', async (req, res, next) => {
   }
 });
 router.get('/my-reviews', async (req, res, next) => {
-  if (req.body.userId) {
+  if (req.query.userId) {
     const result = await reviewModel.findAll({
       where: {
-        user_id: req.body.userId,
+        user_id: req.query.userId,
       },
       include: [bookModel],
+        offset: req.query.offset,
+        limit: 10,
     });
     res.send(result);
   } else {
