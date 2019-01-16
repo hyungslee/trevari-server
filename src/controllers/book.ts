@@ -32,6 +32,29 @@ router.get('/search/title', async (req, res, next) => {
   }
 });
 
+router.get('/search/title/all', async (req, res, next) => {
+    console.log(req.query)
+    if (req.query.input && typeof req.query.input === 'string') {
+        const result = await bookModel
+            .findAll({
+                where: {
+                    title: sequelize.where(
+                        sequelize.fn('LOWER', sequelize.col('title')),
+                        'LIKE',
+                        `%${req.query.input.toLowerCase()}%`,
+                    ),
+                },
+            })
+            .catch(error => {
+                console.error(error);
+                res.send(404);
+            });
+        res.send(result);
+    } else {
+        res.sendStatus(400);
+    }
+});
+
 router.get('/search/author', async (req, res, next) => {
   if (req.query.input && typeof req.query.input === 'string') {
     const result = await bookModel
