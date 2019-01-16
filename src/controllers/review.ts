@@ -109,7 +109,7 @@ router.get('/my-reviews', async (req, res, next) => {
         user_id: req.query.userId,
       },
       include: [bookModel],
-        offset: req.query.offset,
+        offset: Number(req.query.offset),
         limit: 10,
     });
     res.send(result);
@@ -117,5 +117,12 @@ router.get('/my-reviews', async (req, res, next) => {
     res.sendStatus(400);
   }
 });
-
+router.get('/all', async(req, res, next)=>{
+  await reviewModel.findAll()
+      .then((reviews)=>{res.send(reviews)})
+      .catch((error)=>{
+        console.log(error);
+        next();
+      })
+})
 module.exports = router;
