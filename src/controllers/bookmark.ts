@@ -57,5 +57,19 @@ router.get('/my-bookmarks', async(req, res, next) => {
     res.sendStatus(400);
   }
 });
+router.get('/my-bookmarks/all', async(req, res, next) => {
+    if (req.query.userId) {
+        await bookmarkModel.findAll({
+            where: {
+                user_id: req.query.userId,
+            },
+            include: [models.Book],
+        }).then((result) => {
+            res.send(result);
+        });
 
+    } else {
+        res.sendStatus(400);
+    }
+});
 module.exports = router;
